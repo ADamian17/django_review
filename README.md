@@ -96,3 +96,20 @@
     python3 manage.py makemigrations
     python3 manage.py migrate
 ```    
+* #### Admin Console & Setup
+```
+    python3 manage.py createsuperuser
+```
+* in appname/admin.py
+```
+    from django.contrib import admin
+    from .models import Artist
+    admin.site.register(Artist)
+```
+* #### Run Server & Check Admin Dash
+```
+    python3 manage.py runserver
+```
+* check [localhost:8000/admin](http://localhost:8000/admin) in browser
+
+...to be contined
