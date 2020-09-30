@@ -112,4 +112,110 @@
 ```
 * check [localhost:8000/admin](http://localhost:8000/admin) in browser
 
+
+* #### Django ORM, Shell Access
+```
+    python3 manage.py shell
+    quit()
+```
+* #### < APP_NAME > Views 
+    * appname/views.py - SHOW ALL / ONE
+```
+   # NOTE INDEX View
+    def artist_list(request):
+        artists = Artirt.objects.all()
+        return render(request, 'tunr/artist_list.html', {'artists': artists})
+
+
+    # NOTE SHOW View
+    def artist_detail(request, pk):
+        artist = Artirt.objects.get( id=pk )
+        return render(request, 'tunr/artist_detail.html', {'artist': artist} )  
+```    
+* #### < APP_NAME > URL
+    * appname/url.py - (u will need to create the file)
+```
+    from new_review_app.views import artist_detail
+    from os import name
+    from django.urls import path
+    # from django.contrib.auth.models import User
+    from . import views
+    # from django.conf import settings
+
+
+
+    urlpatterns = [
+        path( 'artists', views.artist_list, name='artist_list' ),
+        path('artists/<int:pk>', views.artist_detail, name='artist_detail')
+    ]
+```    
+
+* #### < PROJECT_NAME > URL
+    * projectname/urls.py
+```
+    from django.conf.urls import include
+    from django.urls import path
+    from django.contrib import admin
+
+
+    urlpatterns = [
+        path('admin', admin.site.urls),
+        path('', include('tunr.urls')),
+    ]
+```
+
+* #### Template - Create HTML file for the URLs and Views you just set up
+    * Create appname/templates/artist_list.html - SHOW ALL
+    * Create appname/templates/artist_detail.html - SHOW ONE
+```
+    <!-- templates/artist_list.html -->
+
+    <h1>Artists</h1>
+    <ul>
+        {% for artist in artists %}
+            <li>
+                <a href="{% url 'artist_detail' pk=artist.id %}">{{ artist.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+```  
+```
+    <!-- templates/artist_detail.html -->
+
+    {% extends 'base.html' %} uses the base.html
+
+    {% block content %}
+    <main>
+        <h1>Artist Details</h1>
+        
+        <h2>{{ artist.name }}</h2>
+    </main>
+    {% endblock %}
+```
+* #### Base HTML
+    * templates/appname/base.html
+```
+    {% load static %}
+    
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Tunr</title>
+    </head>
+    <body>
+        <nav>
+            <a href="/">Home</a>
+            <a href="{% url 'artist_list' %}">Artists</a>
+        </nav>
+        
+        {% block content %}
+        {% endblock %}
+    </body>
+    </html>
+```
+
+
 ...to be contined
