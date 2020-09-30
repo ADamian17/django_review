@@ -218,4 +218,151 @@
 ```
 
 
+* #### Forms - CREATE
+    * Create appname/forms.py
+    * Update appname/views.py with the create
+```
+    from django import forms
+    from .models import Artirt
+
+    class ArtistForm( forms.ModelForm ):
+        class Meta:
+            model = Artirt
+            fields = ( 'name', ) # we most leave a , because is expenting a tuple
+```
+
+```
+    def artist_create(request):
+        if request.method == 'POST':
+            form = ArtistForm(request.POST)
+            if form.is_valid():
+                artist = form.save()
+                return redirect('artist_detail', pk=artist.pk)
+        else:
+            form = ArtistForm()
+        return render(request, 'tunr/artist_form.html', {'form': 
+```
+
+* #### Create Template
+    * appname/templates/appname/artist_form.html
+```
+    {% extends 'base.html' %}
+
+    {% block content %}
+        <h1>New Artist</h1>
+        <form method="POST" class="artist-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn">Save</button>
+        </form>
+    {% endblock %}
+```    
+
+* #### Edit Template
+    * update appname/views.py
+    * update appname/urls.py
+```
+    def artist_edit(request, pk):
+        artist = Artirt.objects.get(pk=pk)
+        if request.method == "POST":
+            form = ArtistForm(request.POST, instance=artist)
+            if form.is_valid():
+                artist = form.save()
+                return redirect('artist_detail', pk=artist.pk)
+        else:
+            form = ArtistForm(instance=artist)
+        return render(request, 'artist_form.html', {'form': form})
+```    
+
+* #### Delete - DESTROY
+    * update appname/views.py
+    * update appname/urls.py
+```    
+    def artist_delete(request, pk):
+        Artist.objects.get(id=pk).delete()
+        return redirect('artist_list')
+```    
+
+```
+<!-- appname/urls.py -->
+path('artists/<int:pk>/delete', views.artist_delete, name='artist_delete'),
+```
+
+### Full CRUD in one resorse
+* appname/views.py should look something like this
+```
+    from django.http import request
+    from django.shortcuts import render, redirect
+    from .models import Artirt, Song
+    from .forms import ArtistForm
+
+    # NOTE INDEX View
+    def home( request ):
+        return render( request, 'home.html') 
+
+    def artist_list( request ):
+        artists = Artirt.objects.all()
+        return render(request, 'artist_list.html', {'artists': artists})
+
+
+    # NOTE SHOW View
+    def artist_detail( request, pk ):
+        artist = Artirt.objects.get( id=pk )
+        return render(request, 'artist_detail.html', {'artist': artist} ) 
+
+
+    # NOTE Create View
+    def artist_create( request ):
+        if request.method == 'POST':
+            form = ArtistForm( request.POST )
+
+            if form.is_valid():
+                artist = form.save()
+                return redirect( 'artist_detail', pk= artist.id )
+        else:
+            form = ArtistForm()
+        return render(request, 'artist_form.html', { 'form': form })
+
+
+    # NOTE Update View
+    def artist_edit(request, pk):
+        artist = Artirt.objects.get(pk=pk)
+        if request.method == "POST":
+            form = ArtistForm(request.POST, instance=artist)
+            if form.is_valid():
+                artist = form.save()
+                return redirect('artist_detail', pk=artist.pk)
+        else:
+            form = ArtistForm(instance=artist)
+        return render(request, 'artist_form.html', {'form': form})
+
+
+    # NOTE Destroy View
+    def artist_delete( request, pk ):
+        Artirt.objects.get(id=pk).delete()
+        return redirect('artist_list')
+        
+```
+
+* appname/url.py should look something like this
+
+```
+    from os import name
+    from django.urls import path
+    # from django.contrib.auth.models import User
+    from . import views
+    # from django.conf import settings
+
+
+
+    urlpatterns = [
+        path( '', views.home, name='home' ),
+        path( 'artists', views.artist_list, name='artist_list' ),
+        path( 'artists/<int:pk>', views.artist_detail, name='artist_detail' ),
+        path( 'artists/new', views.artist_create, name='artist_create' ),
+        path('artists/<int:pk>/edit', views.artist_edit, name='artist_edit'),
+        path('artists/<int:pk>/delete', views.artist_delete, name='artist_delete')
+    ]
+```
+
 ...to be contined
