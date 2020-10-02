@@ -65,8 +65,8 @@
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        'projectname'
         'django_extensions',
+         'appname'
     ]
 ```
 ### Start Server
