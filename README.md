@@ -12,8 +12,10 @@
 ```
 * ##### Create Virtual Environment
 ```
-    pip3 install vitualenv
+    pip3 install vitualenv // via vitualenv
     virtualenv .env -p python3
+    
+    python3 -m venv .env // via python3
 
       <!-- start env -->
     source .env/bin/activate
