@@ -37,7 +37,7 @@
  * ##### Start Project, Create App, Create DB
 ```
     django-admin startproject <projectname> .
-    django-admin startapp <appname>
+    django-admin startapp <appname> or python3 manage.py startapp main_app
 ```
 
 ```
