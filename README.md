@@ -1,10 +1,10 @@
 # Django Review
-[X] Create the Project
-[X] Setup all the nesseasry Config
-[X] Create a Model
-[X] Create views
-[X] Create Url
-[X] Create Templates
+- [X] Create the Project
+- [X] Setup all the nesseasry Config
+- [X] Create a Model
+- [X] Create views
+- [X] Create Url
+- [X] Create Templates
 
 
 ##### Summarized from
